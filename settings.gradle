@@ -1,1 +1,1 @@
-include ':android_dsp_lib'
+include ':android_dsp_lib', ':androiddsplibbenchmark'

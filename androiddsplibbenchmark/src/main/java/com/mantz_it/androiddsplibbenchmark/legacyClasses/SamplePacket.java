@@ -1,10 +1,7 @@
-package com.mantz_it.android_dsp_lib;
-
-import android.renderscript.Allocation;
-import android.renderscript.Element;
+package com.mantz_it.androiddsplibbenchmark.legacyClasses;
 
 /**
- * Android DSP library - Sample Packet
+ * <h1>RF Analyzer - Sample Packet</h1>
  *
  * Module:      SamplePacket.java
  * Description: This class encapsulates a packet of complex samples.
@@ -29,12 +26,11 @@ import android.renderscript.Element;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 public class SamplePacket {
-	private Allocation reAlloc;	// real values
-	private Allocation imAlloc;	// imag values
+	private float[] re;			// real values
+	private float[] im;			// imag values
 	private long frequency;		// center frequency
 	private int sampleRate;		// sample rate
-	private int size;			// number of valid samples in this packet
-	private int capacity;		// max number of samples in this packet
+	private int size;			// number of samples in this packet
 
 	/**
 	 * Constructor. This constructor wraps existing arrays and set the number of
@@ -64,12 +60,8 @@ public class SamplePacket {
 			throw new IllegalArgumentException("Arrays must be of the same length");
 		if(size > re.length)
 			throw new IllegalArgumentException("Size must be of the smaller or equal the array length");
-
-		this.capacity = re.length;
-		this.reAlloc = Allocation.createSized(AndroidDSPLib.getRenderScript(), Element.F32(AndroidDSPLib.getRenderScript()), capacity);
-		this.imAlloc = Allocation.createSized(AndroidDSPLib.getRenderScript(), Element.F32(AndroidDSPLib.getRenderScript()), capacity);
-		this.reAlloc.copyFrom(re);
-		this.imAlloc.copyFrom(im);
+		this.re = re;
+		this.im = im;
 		this.frequency = frequency;
 		this.sampleRate = sampleRate;
 		this.size = size;
@@ -78,54 +70,55 @@ public class SamplePacket {
 	/**
 	 * Constructor. This constructor allocates two fresh arrays
 	 *
-	 * @param capacity	Number of samples in this packet
+	 * @param size	Number of samples in this packet
 	 */
-	public SamplePacket(int capacity) {
-		this.capacity = capacity;
-		this.reAlloc = Allocation.createSized(AndroidDSPLib.getRenderScript(), Element.F32(AndroidDSPLib.getRenderScript()), capacity);
-		this.imAlloc = Allocation.createSized(AndroidDSPLib.getRenderScript(), Element.F32(AndroidDSPLib.getRenderScript()), capacity);
+	public SamplePacket(int size) {
+		this.re = new float[size];
+		this.im = new float[size];
 		this.frequency = 0;
 		this.sampleRate = 0;
 		this.size = 0;
 	}
 
 	/**
-	 * @return the reference to the imaginary Allocation object
-	 */
-	public Allocation getImAlloc() {
-		return imAlloc;
-	}
-
-	/**
-	 * @return the reference to the real Allocation object
-	 */
-	public Allocation getReAlloc() {
-		return reAlloc;
-	}
-
-	/**
 	 * @return the reference to the array of real parts
 	 */
 	public float[] re() {
-		float[] out = new float[capacity];
-		reAlloc.copyTo(out);
-		return out;
+		return re;
+	}
+
+	/**
+	 * Returns the real part at the specified index
+	 *
+	 * @param i		index
+	 * @return real part of the sample with the given index
+	 */
+	public float re(int i) {
+		return re[i];
 	}
 
 	/**
 	 * @return the reference to the array of imaginary parts
 	 */
 	public float[] im() {
-		float[] out = new float[capacity];
-		imAlloc.copyTo(out);
-		return out;
+		return im;
+	}
+
+	/**
+	 * Returns the imaginary part at the specified index
+	 *
+	 * @param i		index
+	 * @return imaginary part of the sample with the given index
+	 */
+	public float im(int i) {
+		return im[i];
 	}
 
 	/**
 	 * @return the length of the arrays
 	 */
 	public int capacity() {
-		return capacity;
+		return re.length;
 	}
 
 	/**
@@ -140,7 +133,7 @@ public class SamplePacket {
 	 * @param size	number of (valid) samples in this packet
 	 */
 	public void setSize(int size) {
-		this.size = Math.min(size, capacity);
+		this.size = Math.min(size, re.length);
 	}
 
 	/**
@@ -171,15 +164,5 @@ public class SamplePacket {
 	 */
 	public void setSampleRate(int sampleRate) {
 		this.sampleRate = sampleRate;
-	}
-
-	/**
-	 * Syncs the Allocations in this sample packet. This will block until all current calculations
-	 * (render scripts) on reAlloc and imAlloc are done. This is only necessary when accessing
-	 * the allocations directly - not if accessing through re() and im().
-	 */
-	public void sync() {
-		reAlloc.syncAll(Allocation.USAGE_SCRIPT);
-		imAlloc.syncAll(Allocation.USAGE_SCRIPT);
 	}
 }

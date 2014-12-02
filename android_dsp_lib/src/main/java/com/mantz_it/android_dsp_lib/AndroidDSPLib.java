@@ -2,7 +2,7 @@ package com.mantz_it.android_dsp_lib;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.support.v8.renderscript.RenderScript;
+import android.renderscript.RenderScript;
 import android.util.Log;
 
 /**
