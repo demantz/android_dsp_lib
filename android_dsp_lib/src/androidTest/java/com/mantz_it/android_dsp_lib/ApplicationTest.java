@@ -208,13 +208,13 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
 			assert(floatEquals(inputImag[i], resultImag[i]));
 		}
 
-		// Filter the next 20 samples:
-		out = new SamplePacket(20);
+		// Filter the next 21 samples:
+		out = new SamplePacket(21);
 		firFilter.filterComplexSignal(in, out, 20, in.size()-20);
-		assertEquals(20, out.size());
+		assertEquals(21, out.size());
 		resultReal = out.re();
 		resultImag = out.im();
-		for(int i = 0; i < 20; i++) {
+		for(int i = 0; i < 21; i++) {
 			assert(floatEquals(expectedResultReal[i+20], resultReal[i]));
 			assert(floatEquals(expectedResultImag[i+20], resultImag[i]));
 		}

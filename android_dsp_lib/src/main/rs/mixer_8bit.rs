@@ -26,13 +26,14 @@
  */
 
 #pragma version(1)
+#pragma rs_fp_relaxed
 #pragma rs java_package_name(com.mantz_it.android_dsp_lib)
 
 float *lutReal;            // real lookup table (length 256*cosineLength). calculated by updateLut()
 float *lutImag;            // imag lookup table (length 256*cosineLength). calculated by updateLut()
 uint32_t baseIndex;        // base index for the lookup table
 uint32_t cosineLength;     // length of the cosine (lookup table length / 256)
-uint32_t mixFrequency;     // frequency of the cosine that is mixed to the signal
+int32_t mixFrequency;      // frequency of the cosine that is mixed to the signal
 uint32_t sampleRate;       // sample rate of the incoming signals
 uint8_t signedFlag;        // flag that indicates if lookup table should be based on signed (!=0) or unsigned (==0) values
 rs_allocation outReal;     // Output Allocation for real array
@@ -66,9 +67,9 @@ void mixSignedInterleavedKernel(const char *in, uint32_t x) {
         return; // reached max index
     uint32_t lutOffset = (baseIndex + outIndex) % cosineLength;
     if(x & 0x01)
-        rsSetElementAt(outImag, lutImag + lutOffset*256 + *in + 128, outIndex + offset);
+        rsSetElementAt_float(outImag, *(lutImag + lutOffset*256 + *in + 128), outIndex + offset);
     else
-        rsSetElementAt(outReal, lutReal + lutOffset*256 + *in + 128, outIndex + offset);
+        rsSetElementAt_float(outReal, *(lutReal + lutOffset*256 + *in + 128), outIndex + offset);
 }
 
 void mixUnsignedInterleavedKernel(const char *in, uint32_t x) {
@@ -77,7 +78,7 @@ void mixUnsignedInterleavedKernel(const char *in, uint32_t x) {
         return; // reached max index
     uint32_t lutOffset = (baseIndex + outIndex) % cosineLength;
     if(x & 0x01)
-        rsSetElementAt(outImag, lutImag + lutOffset*256 + (*in & 0xff), outIndex + offset);
+        rsSetElementAt_float(outImag, *(lutImag + lutOffset*256 + (*in & 0xff)), outIndex + offset);
     else
-        rsSetElementAt(outReal, lutReal + lutOffset*256 + (*in & 0xff), outIndex + offset);
+        rsSetElementAt_float(outReal, *(lutReal + lutOffset*256 + (*in & 0xff)), outIndex + offset);
 }

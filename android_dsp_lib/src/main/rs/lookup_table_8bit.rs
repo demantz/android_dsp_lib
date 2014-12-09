@@ -26,6 +26,7 @@
  */
 
 #pragma version(1)
+#pragma rs_fp_relaxed
 #pragma rs java_package_name(com.mantz_it.android_dsp_lib)
 
 float *lut;                // lookup table (length 256). must be set by caller.
@@ -39,9 +40,9 @@ void convertSignedInterleavedKernel(const char *in, uint32_t x) {
     if(outIndex + offset >= len)
         return; // reached max index
     if(x & 0x01)
-        rsSetElementAt(outImag, lut + *in + 128, outIndex + offset);
+        rsSetElementAt_float(outImag, *(lut + *in + 128), outIndex + offset);
     else
-        rsSetElementAt(outReal, lut + *in + 128, outIndex + offset);
+        rsSetElementAt_float(outReal, *(lut + *in + 128), outIndex + offset);
 }
 
 void convertUnsignedInterleavedKernel(const char *in, uint32_t x) {
@@ -49,7 +50,7 @@ void convertUnsignedInterleavedKernel(const char *in, uint32_t x) {
     if(outIndex + offset >= len)
         return; // reached max index
     if(x & 0x01)
-        rsSetElementAt(outImag, lut + (*in & 0xff), outIndex + offset);
+        rsSetElementAt_float(outImag, *(lut + (*in & 0xff)), outIndex + offset);
     else
-        rsSetElementAt(outReal, lut + (*in & 0xff), outIndex + offset);
+        rsSetElementAt_float(outReal, *(lut + (*in & 0xff)), outIndex + offset);
 }

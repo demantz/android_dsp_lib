@@ -26,6 +26,7 @@
  */
 
 #pragma version(1)
+#pragma rs_fp_relaxed
 #pragma rs java_package_name(com.mantz_it.android_dsp_lib)
 
 float* tapsReal;            // Real part of the filter taps
@@ -85,7 +86,7 @@ void updateRealRemainders() {
  */
 void filterAndDecimate(float* out, uint32_t x) {
     int32_t i;
-    int32_t inIndex = offsetIn + x * decimation - filterOrder + 1;
+    int32_t inIndex = x * decimation - filterOrder + 1;
     float resultReal = 0;
     float resultImag = 0;
 
@@ -94,19 +95,19 @@ void filterAndDecimate(float* out, uint32_t x) {
 
     if(inIndex >= 0) {
         // All input values are located in the in-allocations
-        for(i=0; i<=filterOrder; i++) {
-            resultReal += rsGetElementAt_float(inReal, inIndex+i) * tapsReal[i];
-            resultImag += rsGetElementAt_float(inImag, inIndex+i) * tapsReal[i];
+        for(i=0; i<filterOrder; i++) {
+            resultReal += rsGetElementAt_float(inReal, inIndex+offsetIn+i) * tapsReal[i];
+            resultImag += rsGetElementAt_float(inImag, inIndex+offsetIn+i) * tapsReal[i];
         }
     } else {
         // At least one input value is located in the remainder
-        for(i=0; i<=filterOrder; i++) {
+        for(i=0; i<filterOrder; i++) {
             if(inIndex+i < 0) {
                 resultReal += remainderReal[inIndex+i+filterOrder-1] * tapsReal[i];
                 resultImag += remainderImag[inIndex+i+filterOrder-1] * tapsReal[i];
             } else {
-                resultReal += rsGetElementAt_float(inReal, inIndex+i) * tapsReal[i];
-                resultImag += rsGetElementAt_float(inImag, inIndex+i) * tapsReal[i];
+                resultReal += rsGetElementAt_float(inReal, inIndex+offsetIn+i) * tapsReal[i];
+                resultImag += rsGetElementAt_float(inImag, inIndex+offsetIn+i) * tapsReal[i];
             }
         }
     }
@@ -122,7 +123,7 @@ void filterAndDecimate(float* out, uint32_t x) {
  */
 void filterRealSignalAndDecimate(float* out, uint32_t x) {
     int32_t i;
-    int32_t inIndex = offsetIn + x * decimation - filterOrder + 1;
+    int32_t inIndex = x * decimation - filterOrder + 1;
     float resultReal = 0;
 
     if(x + offsetOut >= len)
@@ -130,15 +131,15 @@ void filterRealSignalAndDecimate(float* out, uint32_t x) {
 
     if(inIndex >= 0) {
         // All input values are located in the in-allocations
-        for(i=0; i<=filterOrder; i++)
-            resultReal += rsGetElementAt_float(inReal, inIndex+i) * tapsReal[i];
+        for(i=0; i<filterOrder; i++)
+            resultReal += rsGetElementAt_float(inReal, inIndex+offsetIn+i) * tapsReal[i];
     } else {
         // At least one input value is located in the remainder
-        for(i=0; i<=filterOrder; i++) {
+        for(i=0; i<filterOrder; i++) {
             if(inIndex+i < 0)
                 resultReal += remainderReal[inIndex+i+filterOrder-1] * tapsReal[i];
             else
-                resultReal += rsGetElementAt_float(inReal, inIndex+i) * tapsReal[i];
+                resultReal += rsGetElementAt_float(inReal, inIndex+offsetIn+i) * tapsReal[i];
         }
     }
     rsSetElementAt_float(outReal, resultReal, x + offsetOut);
@@ -152,7 +153,7 @@ void filterRealSignalAndDecimate(float* out, uint32_t x) {
  */
 void filterComplexTapsAndDecimate(float* out, uint32_t x) {
     int32_t i;
-    int32_t inIndex = offsetIn + x * decimation - filterOrder + 1;
+    int32_t inIndex = x * decimation - filterOrder + 1;
     float resultReal = 0;
     float resultImag = 0;
 
@@ -161,19 +162,19 @@ void filterComplexTapsAndDecimate(float* out, uint32_t x) {
 
     if(inIndex >= 0) {
         // All input values are located in the in-allocations
-        for(i=0; i<=filterOrder; i++) {
-            resultReal += rsGetElementAt_float(inReal, inIndex+i) * tapsReal[i] - rsGetElementAt_float(inImag, inIndex+i) * tapsImag[i];
-            resultImag += rsGetElementAt_float(inReal, inIndex+i) * tapsImag[i] + rsGetElementAt_float(inImag, inIndex+i) * tapsReal[i];
+        for(i=0; i<filterOrder; i++) {
+            resultReal += rsGetElementAt_float(inReal, inIndex+offsetIn+i) * tapsReal[i] - rsGetElementAt_float(inImag, inIndex+offsetIn+i) * tapsImag[i];
+            resultImag += rsGetElementAt_float(inReal, inIndex+offsetIn+i) * tapsImag[i] + rsGetElementAt_float(inImag, inIndex+offsetIn+i) * tapsReal[i];
         }
     } else {
         // At least one input value is located in the remainder
-        for(i=0; i<=filterOrder; i++) {
+        for(i=0; i<filterOrder; i++) {
             if(inIndex+i < 0) {
                 resultReal += remainderReal[inIndex+i+filterOrder-1] * tapsReal[i] - remainderImag[inIndex+i+filterOrder-1] * tapsImag[i];
                 resultImag += remainderReal[inIndex+i+filterOrder-1] * tapsImag[i] + remainderImag[inIndex+i+filterOrder-1] * tapsReal[i];
             } else {
-                resultReal += rsGetElementAt_float(inReal, inIndex+i) * tapsReal[i] - rsGetElementAt_float(inImag, inIndex+i) * tapsImag[i];
-                resultImag += rsGetElementAt_float(inReal, inIndex+i) * tapsImag[i] + rsGetElementAt_float(inImag, inIndex+i) * tapsReal[i];
+                resultReal += rsGetElementAt_float(inReal, inIndex+offsetIn+i) * tapsReal[i] - rsGetElementAt_float(inImag, inIndex+offsetIn+i) * tapsImag[i];
+                resultImag += rsGetElementAt_float(inReal, inIndex+offsetIn+i) * tapsImag[i] + rsGetElementAt_float(inImag, inIndex+offsetIn+i) * tapsReal[i];
             }
         }
     }

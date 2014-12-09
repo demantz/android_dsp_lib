@@ -3,6 +3,7 @@ package com.mantz_it.android_dsp_lib;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
+import android.renderscript.Script;
 
 /**
  * Android DSP library - FIR Filter

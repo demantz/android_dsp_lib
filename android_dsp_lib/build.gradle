@@ -5,18 +5,16 @@ android {
     buildToolsVersion "21.1.1"
 
     defaultConfig {
-        applicationId "com.mantz_it.android_dsp_lib"
         minSdkVersion 14
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
         renderscriptTargetApi 20
-        renderscriptSupportMode false
     }
 
     buildTypes {
         release {
-            runProguard false
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
