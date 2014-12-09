@@ -98,7 +98,7 @@ public class Benchmark extends Thread {
 			callback.onFinish(false);
 			return;
 		} else {
-			callback.println(String.format("Performance gain is %d%%\n", (int)(100 * (1f - (float)millisFillPacketIntoSamplePacket8BitSigned/millisFillPacketIntoSamplePacket8BitSigned_legacy))));
+			callback.println(String.format("Performance gain is %d%%\n", (int)(100 * ((float)millisFillPacketIntoSamplePacket8BitSigned_legacy/millisFillPacketIntoSamplePacket8BitSigned - 1))));
 		}
 
 		// IQConverter: mix
@@ -117,7 +117,7 @@ public class Benchmark extends Thread {
 			callback.onFinish(false);
 			return;
 		}else {
-			callback.println(String.format("Performance gain is %d%%\n", (int)(100 * (1f - (float)millisMixPacketIntoSamplePacket8BitSigned/millisMixPacketIntoSamplePacket8BitSigned_legacy))));
+			callback.println(String.format("Performance gain is %d%%\n", (int)(100 * ((float)millisMixPacketIntoSamplePacket8BitSigned_legacy/millisMixPacketIntoSamplePacket8BitSigned - 1))));
 		}
 
 		// LowPassFilter
@@ -136,7 +136,7 @@ public class Benchmark extends Thread {
 			callback.onFinish(false);
 			return;
 		} else {
-			callback.println(String.format("Performance gain is %d%%\n", (int)(100 * (1f - (float)millisLowPassFilter/millisLowPassFilter_legacy))));
+			callback.println(String.format("Performance gain is %d%%\n", (int)(100 * ((float)millisLowPassFilter_legacy/millisLowPassFilter - 1))));
 		}
 
 		// LowPassFilter (decimating by 4)
@@ -155,7 +155,7 @@ public class Benchmark extends Thread {
 			callback.onFinish(false);
 			return;
 		} else {
-			callback.println(String.format("Performance gain is %d%%\n", (int)(100 * (1f - (float)millisDecimatingLowPassFilter/millisDecimatingLowPassFilter_legacy))));
+			callback.println(String.format("Performance gain is %d%%\n", (int)(100 * ((float)millisDecimatingLowPassFilter_legacy/millisDecimatingLowPassFilter - 1))));
 		}
 
 		// LowPassFilter Threaded
@@ -174,7 +174,7 @@ public class Benchmark extends Thread {
 			callback.onFinish(false);
 			return;
 		} else {
-			callback.println(String.format("Performance gain is %d%%\n", (int)(100 * (1f - (float)millisLowPassFilterThreaded/millisLowPassFilterThreaded_legacy))));
+			callback.println(String.format("Performance gain is %d%%\n", (int)(100 * ((float)millisLowPassFilterThreaded_legacy/millisLowPassFilterThreaded - 1))));
 		}
 
 		// LowPassFilter with 9 taps
@@ -193,7 +193,7 @@ public class Benchmark extends Thread {
 			callback.onFinish(false);
 			return;
 		} else {
-			callback.println(String.format("Performance gain is %d%%\n", (int)(100 * (1f - (float)millisLowPassFilter9Taps/millisLowPassFilter9Taps_legacy))));
+			callback.println(String.format("Performance gain is %d%%\n", (int)(100 * ((float)millisLowPassFilter9Taps_legacy/millisLowPassFilter9Taps - 1))));
 		}
 
 		// prepare the csv string:
