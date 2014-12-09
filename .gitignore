@@ -9,6 +9,7 @@ gen/
 local.properties
 
 # Android Studio
-.idea
-.gradle
+*.idea
+*.gradle
+*.iml
 build/
