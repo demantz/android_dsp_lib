@@ -1,5 +1,8 @@
 CHANGELOG - Android DSP library
 
+version 1.03:
+ - Including android_dsp_lib 1.02
+
 version 1.02:
  - Including android_dsp_lib 1.01
 

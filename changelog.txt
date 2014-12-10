@@ -1,5 +1,8 @@
 CHANGELOG - Android DSP library
 
+version 1.02:
+ - Changing RenderScript target API to 18
+
 version 1.01:
  - Switched to using the RenderScript support library.
 

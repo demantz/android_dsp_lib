@@ -115,6 +115,7 @@ public class MainActivity extends Activity implements Benchmark.BenchmarkCallbac
 		tv_output.setText("Benchmark for the Android DSP library version " + version +
 				" by Dennis Mantz.\nDevice Manufacturer: " + manufacturer + "\n" +
 				"Device Model: " + model + "\nAPI-Level: " + apiLevel + "\n\n");
+		Log.i(LOGTAG, tv_output.getText().toString());
 	}
 
 	@Override
