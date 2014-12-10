@@ -1,8 +1,8 @@
 package com.mantz_it.android_dsp_lib;
 
-import android.renderscript.Allocation;
-import android.renderscript.Element;
-import android.renderscript.RenderScript;
+import android.support.v8.renderscript.Allocation;
+import android.support.v8.renderscript.Element;
+import android.support.v8.renderscript.RenderScript;
 
 /**
  * Android DSP library - Lookup Table 8bit

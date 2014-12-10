@@ -1,7 +1,10 @@
 CHANGELOG - Android DSP library
 
+version 1.02:
+ - Including android_dsp_lib 1.01
+
 version 1.01:
- - Switched to using the RenderScript support library.
+ - Add logging
 
 version 1.00:
  - Initial version. Not stable. Not optimized. Not complete.

@@ -1,7 +1,7 @@
 package com.mantz_it.android_dsp_lib;
 
-import android.renderscript.Allocation;
-import android.renderscript.Element;
+import android.support.v8.renderscript.Allocation;
+import android.support.v8.renderscript.Element;
 
 /**
  * Android DSP library - Sample Packet
