@@ -13,6 +13,7 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -59,16 +60,29 @@ public class MainActivity extends Activity implements Benchmark.BenchmarkCallbac
 	private Button bt_submit;
 	private TextView tv_output;
 	private Benchmark benchmark;
+	private File logfile;
+	private Process logcat;
 	private String version = "unknown";
 	private String manufacturer = "unknown";
 	private String model = "unknown";
 	private String uniqueID = "unknown";
 	private String apiLevel = "unknown";
+	private static final String LOGTAG = "ANDROID_DSP_BENCHMARK";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		// Start logging:
+		try{
+			logfile = new File(Environment.getExternalStorageDirectory(), "android_dsp_lib_benchmark_log.txt");
+			logcat = Runtime.getRuntime().exec("logcat -f " + logfile.getAbsolutePath());
+			Log.i(LOGTAG, "onCreate: log path: " + logfile.getAbsolutePath());
+		} catch (Exception e) {
+			Log.e(LOGTAG, "onCreate: Failed to start logging!");
+		}
+
 		bt_start = (Button) findViewById(R.id.bt_start);
 		bt_stop = (Button) findViewById(R.id.bt_stop);
 		bt_submit = (Button) findViewById(R.id.bt_submit);
@@ -103,6 +117,12 @@ public class MainActivity extends Activity implements Benchmark.BenchmarkCallbac
 				"Device Model: " + model + "\nAPI-Level: " + apiLevel + "\n\n");
 	}
 
+	@Override
+	protected void onDestroy() {
+		if(logcat != null)
+			logcat.destroy();
+		super.onDestroy();
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -118,7 +138,15 @@ public class MainActivity extends Activity implements Benchmark.BenchmarkCallbac
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 
-		//noinspection SimplifiableIfStatement
+		if (id == R.id.action_showLog) {
+			Uri uri = Uri.fromFile(logfile);
+			Intent intent = new Intent(Intent.ACTION_VIEW);
+			intent.setDataAndType(uri, "text/plain");
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			this.startActivity(intent);
+			return true;
+		}
+
 		if (id == R.id.action_settings) {
 			return true;
 		}
@@ -147,7 +175,8 @@ public class MainActivity extends Activity implements Benchmark.BenchmarkCallbac
 		bt_start.setEnabled(true);
 		bt_stop.setEnabled(false);
 		bt_submit.setEnabled(false);
-		benchmark.stopBenchmark();
+		if(benchmark != null)
+			benchmark.stopBenchmark();
 
 		// allow screen to turn off again:
 		this.runOnUiThread(new Runnable() {
@@ -185,6 +214,7 @@ public class MainActivity extends Activity implements Benchmark.BenchmarkCallbac
 
 	@Override
 	public void print(final String msg) {
+		Log.i(LOGTAG, msg);
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
@@ -195,6 +225,7 @@ public class MainActivity extends Activity implements Benchmark.BenchmarkCallbac
 
 	@Override
 	public void println(final String msg) {
+		Log.i(LOGTAG, msg);
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
@@ -205,6 +236,7 @@ public class MainActivity extends Activity implements Benchmark.BenchmarkCallbac
 
 	@Override
 	public void outputErr(final String msg) {
+		Log.e(LOGTAG, msg);
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {

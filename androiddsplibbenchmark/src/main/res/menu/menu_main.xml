@@ -1,6 +1,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:tools="http://schemas.android.com/tools"
       tools:context=".MainActivity">
+    <item android:id="@+id/action_showLog"
+          android:title="@string/action_showLog"
+          android:orderInCategory="50"
+          android:showAsAction="never"/>
     <item android:id="@+id/action_settings"
           android:title="@string/action_settings"
           android:orderInCategory="100"

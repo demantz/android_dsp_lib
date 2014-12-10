@@ -1,4 +1,7 @@
 CHANGELOG - Android DSP library
 
+version 1.01:
+ - Add logging
+
 version 1.00:
  - Initial version. Not stable. Not optimized. Not complete.
