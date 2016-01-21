@@ -77,8 +77,14 @@ void mixUnsignedInterleavedKernel(const char *in, uint32_t x) {
     if(outIndex + offset >= len)
         return; // reached max index
     uint32_t lutOffset = (baseIndex + outIndex) % cosineLength;
-    if(x & 0x01)
-        rsSetElementAt_float(outImag, *(lutImag + lutOffset*256 + (*in & 0xff)), outIndex + offset);
-    else
-        rsSetElementAt_float(outReal, *(lutReal + lutOffset*256 + (*in & 0xff)), outIndex + offset);
+    float value;
+    if(x & 0x01) {
+        // the imaginary component is calculated: im * cos - re * sin  (note that *(in-1) is re)
+        value = *(lutReal + lutOffset*256 + (*in & 0xff)) - *(lutImag + lutOffset*256 + (*(in-1) & 0xff));
+        rsSetElementAt_float(outImag, value, outIndex + offset);
+    } else {
+        // the real component is calculated: re * cos - im * sin  (note that *(in+1) is im)
+        value = *(lutReal + lutOffset*256 + (*in & 0xff)) + *(lutImag + lutOffset*256 + (*(in+1) & 0xff));
+        rsSetElementAt_float(outReal, value, outIndex + offset);
+    }
 }
