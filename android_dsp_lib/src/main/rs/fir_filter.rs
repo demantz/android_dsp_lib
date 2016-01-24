@@ -1,9 +1,8 @@
 /**
- * Android DSP library - Mixer for 8 bit input values
+ * Android DSP library - FIR Filter
  *
- * Module:      mixer_8bit.rs
- * Description: This kernel can do frequency shift and conversion of 8 bit values to float
-                (e.g. IQ bytes -> floats) by using a lookup table
+ * Module:      fir_filter.rs
+ * Description: This kernel implements a FIR filter (real and complex taps possible)
  *
  * @author Dennis Mantz
  *
